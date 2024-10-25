@@ -58,7 +58,7 @@ _____________________5¶¶¶5____¶5
 Instalação
 Clone o repositório:
 ```bash
-git clone https://github.com/seu_usuario/dragon-vulnerability-tester.git
+git clone https://github.com/GT9sec/dragon-vulnerability-tester.git
 cd dragon-vulnerability-tester
 ```
 Compile o código:
