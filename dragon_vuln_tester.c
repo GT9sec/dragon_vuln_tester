@@ -64,8 +64,30 @@ void imprime_banner() {
 
 
 size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp){
-    strcat(userp, contents);
-    return size * nmemb;
+    size_t realsize = size * nmemb;		
+    if(realsize + strlen(userp) < 4096){
+       strncat(userp, contents, realsize);
+    }
+    return realsize;
+}
+
+void salvar_em_arquivos(const char *dados){
+    FILE *arquivo = fopen("resultados.txt", "a");
+    if(arquivo != NULL){
+        fprintf(arquivo, "%s\n", dados);
+	fclose(arquivo);
+	printf("\033[0;32;1mResultados salvos em 'resultados.txt'.\003[0m\n");
+    }else{
+        printf("\033[0;32;1mErro ao salvar os resultados...\033[0m\n");
+    }
+}
+
+void exibir_resultados_formatados(const char *dados, const char *endpoint){
+    printf("\033[0;32;1mUsuários encontrados no endpoint: %s\n", endpoint);
+    printf("---------------------------------------------------\n");
+    printf("%s\n", dados);
+    printf("------------------------------------------------\n\n");
+    salvar_em_arquivos(dados);
 
 }
 
@@ -80,7 +102,15 @@ void tentar_buscar_usuarios(const char *url){
 	"/wp-json/?rest_route=/wp/v2/users&per_page=100&page=1",
 	"/wp-json/?rest_route=/wp/v2/users&context=edit",
 	"/wp-json/wp/v2/search?search=admin",
-	"/wp-json/wp/v2/comments"
+	"/wp-json/wp/v2/comments",
+	"/wp-json/wp/v2/media",
+        "/wp-json/wp/v2/categories",
+        "/wp-json/wp/v2/tags",
+        "/wp-json/wp/v2/pages",
+        "/wp-json/wp/v2/posts",
+	"/wp-json/wp/v2/settings",
+	"/wp-json/wp/v2/comments?per_page=100",
+	"/wp-json/wp/v2/users/me"
     
     };
 
@@ -107,10 +137,7 @@ void tentar_buscar_usuarios(const char *url){
 	res = curl_easy_perform(curl);
 
 	if(res == CURLE_OK && strlen(response) > 0){
-	    printf("\033[0;34;1mUsuários encontrados no endpoint: %s\n", endpoints[i]);
-	    printf("%s\n", response);
-	    break;
-	
+	    exibir_resultados_formatados(response, endpoints[i]);
 	}else{
 	    printf("\033[0;31;1mFalha ao buscar usuários no endpoint: %s\n", endpoints[i]);
 	}
