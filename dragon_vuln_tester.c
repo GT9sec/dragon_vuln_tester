@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> //O terror do GT9Fraga SKSKSK, brincadeira, te amo s2
+#include <string.h> 
 #include <curl/curl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
